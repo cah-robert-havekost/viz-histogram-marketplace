@@ -10,9 +10,16 @@ looker.plugins.visualizations.add({
   create: function (element, config) {
     var container = element.appendChild(document.createElement("div"));
     container.setAttribute("id", "my-vega");
+    console.log("creating");
+    console.log("options", baseOptions);
   },
 
   updateAsync: function (data, element, config, queryResponse, details, done) {
+    console.log("Calling UpdateAsync");
+    console.log("Data Length", data.length);
+    //console.log("config", config);
+    //console.log("element", element);
+    //console.log("details", details);
     if (data.length === 0) {
       this.addError({ title: "No Results" });
       done();
@@ -29,9 +36,9 @@ looker.plugins.visualizations.add({
           min_measures: 2,
           max_measures: undefined,
         })
-      )
+      ){
         return;
-
+      }
       scatterHist(data, element, config, queryResponse, details, done, this, embed);
     } else {
       if (
@@ -43,9 +50,9 @@ looker.plugins.visualizations.add({
           min_measures: 1,
           max_measures: undefined,
         })
-      )
+      ){
         return;
-
+      }
       simpleHist(data, element, config, queryResponse, details, done, this, embed);
     }
   },

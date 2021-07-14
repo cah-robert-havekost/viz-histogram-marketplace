@@ -13,6 +13,7 @@ export function simpleHist(
   that,
   embed
 ) {
+  console.log("Init Simple Hist");
   that.clearErrors();
   let { dataProperties, myData } = prepareData(data, queryResponse);
   const vegaSafeNameMes = queryResponse.fields.measure_like[0].name.replace(".", "_");
@@ -78,6 +79,7 @@ export function simpleHist(
       values: [{ "1% - 99%": "1_99" }, { "5% - 95%": "5_95" }],
     };
   }
+  console.log("that", that);
   that.trigger("registerOptions", options);
 
   if (config["winsorization"]) {
@@ -249,15 +251,16 @@ export function simpleHist(
       if (baseURL.length < 1) {
         links = [];
       } else {
-        baseURL = baseURL
-          .filter((ele) => ele.url.includes("/explore/"))[0]
-          .url.split("?")[0];
-        let url = `${baseURL}?fields=${fields.join(",")}`;
+        baseURL = baseURL.filter((ele) => ele.url.includes("embed"))[0];
+        //let link_label = baseURL.label;
+        let link_label = baseURL.label.split(" (")[0]
+        baseURL = baseURL.url.split("?")[0];
+        let url = baseURL;
 
         // Apply appropriate filtering based on bounds
-        url += `&f[${aggField}]=[${item.datum[bounds[0]]}, ${item.datum[bounds[1]]})`;
+        url += `?&f[${aggField}]=[${item.datum[bounds[0]]}, ${item.datum[bounds[1]]})`;
 
-        //Inherit query filters
+        //Inherit query filters 
         if (queryResponse.applied_filters !== undefined) {
           let filters = queryResponse.applied_filters;
           for (let filter in filters) {
@@ -266,13 +269,13 @@ export function simpleHist(
         }
         links = [
           {
-            label: `Show ${
+            /*label: `Show ${
               config["bin_type"] === "breakpoints"
                 ? item.datum.count_x
                 : item.datum.__count
-            } Records`,
-            type: "drill",
-            type_label: "Drill into Records",
+            } Records`,*/
+            type_label: "Dashboards",
+            label: link_label,
             url: url,
           },
         ];
@@ -282,5 +285,7 @@ export function simpleHist(
         event: event,
       });
     });
+
+    done();
   });
 }

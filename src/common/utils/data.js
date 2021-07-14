@@ -21,6 +21,7 @@ export function winsorize(myData, field, p) {
 }
 
 export function handleErrors(vis, res, options) {
+  console.log("checking errors");
   const check = (group, noun, count, min, max) => {
     if (!vis.addError || !vis.clearErrors) return false;
     if (count < min) {
@@ -163,7 +164,7 @@ export function makeBins(myData, field, breakpointsArray, valFormat, axis) {
       case "min":
         return orderedArray[0];
       case "max":
-        return orderedArray[orderedArray.length - 1];
+        return orderedArray[orderedArray.length - 1] + 1;
       default:
         return eval(e);
     }
